@@ -1,0 +1,274 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+@import "shadcn/tailwind.css";
+
+@custom-variant dark (&:is(.dark *));
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --font-sans: var(--font-sans);
+  --font-mono: var(--font-geist-mono);
+  --font-heading: var(--font-sans);
+  --color-sidebar-ring: var(--sidebar-ring);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar: var(--sidebar);
+  --color-chart-5: var(--chart-5);
+  --color-chart-4: var(--chart-4);
+  --color-chart-3: var(--chart-3);
+  --color-chart-2: var(--chart-2);
+  --color-chart-1: var(--chart-1);
+  --color-ring: var(--ring);
+  --color-input: var(--input);
+  --color-border: var(--border);
+  --color-destructive: var(--destructive);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-accent: var(--accent);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-muted: var(--muted);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-secondary: var(--secondary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-primary: var(--primary);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-popover: var(--popover);
+  --color-card-foreground: var(--card-foreground);
+  --color-card: var(--card);
+  --radius-sm: calc(var(--radius) * 0.6);
+  --radius-md: calc(var(--radius) * 0.8);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) * 1.4);
+  --radius-2xl: calc(var(--radius) * 1.8);
+  --radius-3xl: calc(var(--radius) * 2.2);
+  --radius-4xl: calc(var(--radius) * 2.6);
+}
+
+:root {
+  /* Premium Navy + Teal/Blue color scheme for Spawn Crest */
+  --background: oklch(0.985 0.005 260);
+  --foreground: oklch(0.145 0.02 260);
+  --card: oklch(1 0 0);
+  --card-foreground: oklch(0.145 0.02 260);
+  --popover: oklch(1 0 0);
+  --popover-foreground: oklch(0.145 0.02 260);
+  /* Deep navy primary */
+  --primary: oklch(0.205 0.045 260);
+  --primary-foreground: oklch(0.985 0.005 260);
+  --secondary: oklch(0.96 0.01 260);
+  --secondary-foreground: oklch(0.205 0.045 260);
+  --muted: oklch(0.96 0.01 260);
+  --muted-foreground: oklch(0.48 0.02 260);
+  /* Teal/Blue accent */
+  --accent: oklch(0.58 0.12 195);
+  --accent-foreground: oklch(0.985 0.005 260);
+  --destructive: oklch(0.577 0.245 27.325);
+  --border: oklch(0.91 0.01 260);
+  --input: oklch(0.94 0.008 260);
+  --ring: oklch(0.58 0.12 195);
+  --chart-1: oklch(0.87 0 0);
+  --chart-2: oklch(0.556 0 0);
+  --chart-3: oklch(0.439 0 0);
+  --chart-4: oklch(0.371 0 0);
+  --chart-5: oklch(0.269 0 0);
+  --radius: 0.75rem;
+  --sidebar: oklch(0.985 0 0);
+  --sidebar-foreground: oklch(0.145 0 0);
+  --sidebar-primary: oklch(0.205 0.045 260);
+  --sidebar-primary-foreground: oklch(0.985 0 0);
+  --sidebar-accent: oklch(0.96 0.01 260);
+  --sidebar-accent-foreground: oklch(0.205 0.045 260);
+  --sidebar-border: oklch(0.91 0.01 260);
+  --sidebar-ring: oklch(0.58 0.12 195);
+
+  /* Brand specific tokens */
+  --brand-navy: #0A1629;
+  --brand-navy-light: #1E3A5F;
+  --brand-teal: #0D9488;
+  --brand-blue: #0284C8;
+  --brand-cyan: #06B6D4;
+  --brand-gold: #D4AF37;
+}
+
+.dark {
+  --background: oklch(0.145 0.02 260);
+  --foreground: oklch(0.985 0.005 260);
+  --card: oklch(0.205 0.03 260);
+  --card-foreground: oklch(0.985 0.005 260);
+  --popover: oklch(0.205 0.03 260);
+  --popover-foreground: oklch(0.985 0.005 260);
+  --primary: oklch(0.88 0.02 260);
+  --primary-foreground: oklch(0.145 0.02 260);
+  --secondary: oklch(0.269 0.02 260);
+  --secondary-foreground: oklch(0.985 0.005 260);
+  --muted: oklch(0.269 0.02 260);
+  --muted-foreground: oklch(0.708 0.02 260);
+  --accent: oklch(0.65 0.12 195);
+  --accent-foreground: oklch(0.145 0.02 260);
+  --destructive: oklch(0.704 0.191 22.216);
+  --border: oklch(1 0 0 / 10%);
+  --input: oklch(1 0 0 / 15%);
+  --ring: oklch(0.65 0.12 195);
+  --chart-1: oklch(0.87 0 0);
+  --chart-2: oklch(0.556 0 0);
+  --chart-3: oklch(0.439 0 0);
+  --chart-4: oklch(0.371 0 0);
+  --chart-5: oklch(0.269 0 0);
+  --sidebar: oklch(0.205 0.03 260);
+  --sidebar-foreground: oklch(0.985 0.005 260);
+  --sidebar-primary: oklch(0.65 0.12 195);
+  --sidebar-primary-foreground: oklch(0.145 0.02 260);
+  --sidebar-accent: oklch(0.269 0.02 260);
+  --sidebar-accent-foreground: oklch(0.985 0.005 260);
+  --sidebar-border: oklch(1 0 0 / 10%);
+  --sidebar-ring: oklch(0.65 0.12 195);
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
+  html {
+    @apply font-sans;
+    scroll-behavior: smooth;
+  }
+}
+
+/* Premium Plumbing Website Styles */
+@layer components {
+  .section {
+    @apply py-16 md:py-20 lg:py-24;
+  }
+
+  .section-title {
+    @apply text-3xl md:text-4xl lg:text-5xl font-semibold tracking-[-0.02em] text-[var(--brand-navy)];
+  }
+
+  .section-subtitle {
+    @apply text-lg md:text-xl text-muted-foreground max-w-2xl;
+  }
+
+  .nav-link {
+    @apply text-sm font-medium text-[var(--brand-navy)]/80 transition-colors hover:text-[var(--brand-navy)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--brand-teal)] focus-visible:ring-offset-2 rounded-sm px-1;
+  }
+
+  .premium-card {
+    @apply bg-card border border-border/60 rounded-2xl shadow-sm transition-all duration-300 hover:shadow-lg hover:-translate-y-0.5;
+  }
+
+  .service-icon {
+    @apply inline-flex h-12 w-12 items-center justify-center rounded-xl bg-[var(--brand-navy)]/5 text-[var(--brand-navy)];
+  }
+
+  .trust-icon {
+    @apply inline-flex h-10 w-10 items-center justify-center rounded-lg bg-[var(--brand-teal)]/10 text-[var(--brand-teal)];
+  }
+
+  .hero-bg {
+    background:
+      linear-gradient(135deg, #0A1629 0%, #132A45 50%, #0A1629 100%),
+      radial-gradient(circle at 30% 20%, rgba(6, 182, 212, 0.08) 0%, transparent 50%),
+      radial-gradient(circle at 70% 80%, rgba(13, 148, 136, 0.06) 0%, transparent 60%);
+  }
+
+  .water-flow {
+    position: relative;
+    overflow: hidden;
+  }
+
+  .water-flow::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+      90deg,
+      transparent,
+      rgba(6, 182, 212, 0.15),
+      transparent
+    );
+    background-size: 200% 100%;
+    animation: water-shimmer 3.5s linear infinite;
+    pointer-events: none;
+  }
+
+  @keyframes water-shimmer {
+    0% { background-position: 200% 0; }
+    100% { background-position: -200% 0; }
+  }
+
+  .nav-scrolled {
+    @apply bg-white/95 backdrop-blur-xl border-b border-border/60 shadow-sm;
+  }
+
+  .stat-number {
+    @apply font-semibold tabular-nums tracking-[-0.02em];
+  }
+
+  .gallery-item {
+    @apply relative overflow-hidden rounded-2xl bg-muted aspect-[4/3] flex items-center justify-center;
+  }
+
+  .gallery-item::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    background: linear-gradient(
+      to top,
+      rgba(10, 22, 41, 0.88) 0%,
+      rgba(10, 22, 41, 0.45) 42%,
+      rgba(10, 22, 41, 0.08) 72%,
+      transparent 100%
+    );
+    transition: opacity 0.3s ease;
+  }
+
+  .group:hover .gallery-item::after {
+    background: linear-gradient(
+      to top,
+      rgba(10, 22, 41, 0.92) 0%,
+      rgba(10, 22, 41, 0.55) 45%,
+      rgba(10, 22, 41, 0.12) 75%,
+      transparent 100%
+    );
+  }
+
+  .form-input {
+    @apply w-full rounded-xl border border-input bg-background px-4 py-3 text-base transition-all placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--brand-teal)] focus-visible:border-[var(--brand-teal)] disabled:cursor-not-allowed disabled:opacity-50;
+  }
+}
+
+/* Subtle animation utilities */
+.fade-in {
+  animation: fadeIn 0.6s ease-out forwards;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(12px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* Mobile nav */
+.mobile-nav-link {
+  @apply block w-full px-4 py-3 text-base font-medium text-[var(--brand-navy)] border-b border-border/60 transition-colors active:bg-muted;
+}
+
+/* Quote form */
+.quote-form .label {
+  @apply text-sm font-medium text-foreground mb-1.5 block;
+}
+
+/* Map placeholder styling */
+.map-placeholder {
+  background-image: 
+    linear-gradient(rgba(10,22,41,0.04) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(10,22,41,0.04) 1px, transparent 1px);
+  background-size: 24px 24px;
+}
