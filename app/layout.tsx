@@ -18,7 +18,7 @@ const siteUrl =
   process.env.NEXT_PUBLIC_SITE_URL ||
   (process.env.VERCEL_PROJECT_PRODUCTION_URL
     ? `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}`
-    : "https://spawn-crest-website.vercel.app");
+    : "https://www.spawncrest.com");
 
 const siteTitle = "Spawn Crest Plumbing | Fresno & Central Valley Plumbers";
 const siteDescription =
