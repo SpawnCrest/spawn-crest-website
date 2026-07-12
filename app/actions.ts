@@ -1,7 +1,7 @@
 "use server";
 
 import { z } from "zod";
-import { Resend } from "resend";
+import { sendContactEmail } from "@/lib/email";
 
 const quoteSchema = z.object({
   name: z.string().min(2, "Name must be at least 2 characters"),
@@ -17,7 +17,14 @@ const quoteSchema = z.object({
 
 export type QuoteFormData = z.infer<typeof quoteSchema>;
 
-const QUOTE_TO_EMAIL = "admin@spawncrest.com";
+function escapeHtml(value: string) {
+  return value
+    .replaceAll("&", "&amp;")
+    .replaceAll("<", "&lt;")
+    .replaceAll(">", "&gt;")
+    .replaceAll('"', "&quot;")
+    .replaceAll("'", "&#39;");
+}
 
 function buildQuoteEmail(data: QuoteFormData) {
   const subject = `New Quote Request: ${data.service} — ${data.name}`;
@@ -52,76 +59,6 @@ function buildQuoteEmail(data: QuoteFormData) {
   return { subject, text, html };
 }
 
-function escapeHtml(value: string) {
-  return value
-    .replaceAll("&", "&amp;")
-    .replaceAll("<", "&lt;")
-    .replaceAll(">", "&gt;")
-    .replaceAll('"', "&quot;")
-    .replaceAll("'", "&#39;");
-}
-
-async function sendQuoteEmail(data: QuoteFormData) {
-  const { subject, text, html } = buildQuoteEmail(data);
-  const apiKey = process.env.RESEND_API_KEY;
-
-  if (apiKey) {
-    const resend = new Resend(apiKey);
-    const from =
-      process.env.RESEND_FROM_EMAIL ||
-      "Spawn Crest Website <onboarding@resend.dev>";
-
-    const { error } = await resend.emails.send({
-      from,
-      to: QUOTE_TO_EMAIL,
-      replyTo: data.email,
-      subject,
-      text,
-      html,
-    });
-
-    if (error) {
-      throw new Error(error.message);
-    }
-    return;
-  }
-
-  // Zero-config fallback so quotes still reach admin@spawncrest.com
-  // without a Resend key. First delivery may require email confirmation.
-  const response = await fetch(
-    `https://formsubmit.co/ajax/${QUOTE_TO_EMAIL}`,
-    {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Accept: "application/json",
-      },
-      body: JSON.stringify({
-        name: data.name,
-        phone: data.phone,
-        email: data.email,
-        service: data.service,
-        location: data.location || "Not provided",
-        message: data.message || "No message",
-        _subject: subject,
-        _template: "table",
-        _replyto: data.email,
-        _captcha: "false",
-      }),
-    }
-  );
-
-  if (!response.ok) {
-    const body = await response.text();
-    throw new Error(`Email delivery failed: ${body}`);
-  }
-
-  const result = (await response.json()) as { success?: string | boolean };
-  if (result.success === false || result.success === "false") {
-    throw new Error("Email delivery was rejected by the mail provider.");
-  }
-}
-
 export async function submitQuoteRequest(
   prevState: { success: boolean; message: string } | null,
   formData: FormData
@@ -146,15 +83,39 @@ export async function submitQuoteRequest(
   }
 
   const data = result.data;
+  const email = buildQuoteEmail(data);
 
   try {
-    await sendQuoteEmail(data);
+    await sendContactEmail({
+      subject: email.subject,
+      text: email.text,
+      html: email.html,
+      replyTo: data.email,
+      fields: {
+        name: data.name,
+        phone: data.phone,
+        email: data.email,
+        service: data.service,
+        location: data.location || "Not provided",
+        message: data.message || "No message",
+      },
+    });
   } catch (error) {
     console.error("[Spawn Crest] Failed to forward quote request:", error);
+    const detail = error instanceof Error ? error.message : "";
+    // Helpful hints without leaking secrets
+    let hint =
+      "We couldn't send your request right now. Please call us at (559) 573-2269 and we'll help you right away.";
+    if (/domain|verified|from/i.test(detail)) {
+      hint +=
+        " (Email setup: verify your domain in Resend, or use onboarding@resend.dev as the from address.)";
+    } else if (/activate|confirm/i.test(detail)) {
+      hint +=
+        " (If this is the first submission, check admin@spawncrest.com for a FormSubmit activation email.)";
+    }
     return {
       success: false,
-      message:
-        "We couldn't send your request right now. Please call us at (559) 573-2269 and we'll help you right away.",
+      message: hint,
     };
   }
 
@@ -225,69 +186,6 @@ function buildMembershipEmail(data: MembershipFormData) {
   return { subject, text, html };
 }
 
-async function sendMembershipEmail(data: MembershipFormData) {
-  const { subject, text, html } = buildMembershipEmail(data);
-  const apiKey = process.env.RESEND_API_KEY;
-
-  if (apiKey) {
-    const resend = new Resend(apiKey);
-    const from =
-      process.env.RESEND_FROM_EMAIL ||
-      "Spawn Crest Website <onboarding@resend.dev>";
-
-    const { error } = await resend.emails.send({
-      from,
-      to: QUOTE_TO_EMAIL,
-      replyTo: data.email,
-      subject,
-      text,
-      html,
-    });
-
-    if (error) {
-      throw new Error(error.message);
-    }
-    return;
-  }
-
-  const response = await fetch(
-    `https://formsubmit.co/ajax/${QUOTE_TO_EMAIL}`,
-    {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Accept: "application/json",
-      },
-      body: JSON.stringify({
-        name: data.name,
-        phone: data.phone,
-        email: data.email,
-        plan: data.plan,
-        planPrice: data.planPrice,
-        paymentPreference: data.paymentPreference,
-        address: data.address,
-        city: data.city,
-        zip: data.zip,
-        notes: data.notes || "None",
-        _subject: subject,
-        _template: "table",
-        _replyto: data.email,
-        _captcha: "false",
-      }),
-    }
-  );
-
-  if (!response.ok) {
-    const body = await response.text();
-    throw new Error(`Email delivery failed: ${body}`);
-  }
-
-  const result = (await response.json()) as { success?: string | boolean };
-  if (result.success === false || result.success === "false") {
-    throw new Error("Email delivery was rejected by the mail provider.");
-  }
-}
-
 export async function submitMembershipEnrollment(
   prevState: { success: boolean; message: string } | null,
   formData: FormData
@@ -315,8 +213,28 @@ export async function submitMembershipEnrollment(
     };
   }
 
+  const data = result.data;
+  const email = buildMembershipEmail(data);
+
   try {
-    await sendMembershipEmail(result.data);
+    await sendContactEmail({
+      subject: email.subject,
+      text: email.text,
+      html: email.html,
+      replyTo: data.email,
+      fields: {
+        name: data.name,
+        phone: data.phone,
+        email: data.email,
+        plan: data.plan,
+        planPrice: data.planPrice,
+        paymentPreference: data.paymentPreference,
+        address: data.address,
+        city: data.city,
+        zip: data.zip,
+        notes: data.notes || "None",
+      },
+    });
   } catch (error) {
     console.error("[Spawn Crest] Failed to forward membership enrollment:", error);
     return {

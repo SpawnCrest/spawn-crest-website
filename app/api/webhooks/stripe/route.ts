@@ -1,11 +1,9 @@
 import { NextResponse } from "next/server";
-import { Resend } from "resend";
 import type Stripe from "stripe";
 import { getStripe } from "@/lib/stripe";
+import { sendContactEmail } from "@/lib/email";
 
 export const runtime = "nodejs";
-
-const ADMIN_EMAIL = "admin@spawncrest.com";
 
 async function notifyAdmin(session: Stripe.Checkout.Session) {
   const m = session.metadata || {};
@@ -32,33 +30,18 @@ async function notifyAdmin(session: Stripe.Checkout.Session) {
     `Notes: ${m.notes || "None"}`,
   ].join("\n");
 
-  const apiKey = process.env.RESEND_API_KEY;
-  if (apiKey) {
-    const resend = new Resend(apiKey);
-    const from =
-      process.env.RESEND_FROM_EMAIL ||
-      "Spawn Crest Website <onboarding@resend.dev>";
-    await resend.emails.send({
-      from,
-      to: ADMIN_EMAIL,
-      subject,
-      text,
-    });
-    return;
-  }
-
-  await fetch(`https://formsubmit.co/ajax/${ADMIN_EMAIL}`, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      Accept: "application/json",
-    },
-    body: JSON.stringify({
-      _subject: subject,
+  await sendContactEmail({
+    subject,
+    text,
+    html: `<pre style="font-family:system-ui,sans-serif;white-space:pre-wrap">${text.replaceAll("<", "&lt;")}</pre>`,
+    fields: {
+      plan: m.planName || "",
+      amount,
+      name: m.customerName || "",
+      email: m.email || session.customer_email || "",
+      phone: m.phone || "",
       message: text,
-      _template: "table",
-      _captcha: "false",
-    }),
+    },
   });
 }
 
