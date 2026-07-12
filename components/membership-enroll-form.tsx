@@ -1,10 +1,9 @@
 "use client";
 
-import { useActionState, useEffect, useState } from "react";
+import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
-import { submitMembershipEnrollment } from "@/app/actions";
 import {
   formatMembershipPrice,
   type MembershipPlan,
@@ -13,14 +12,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import { Loader2, ShieldCheck } from "lucide-react";
+import { Loader2, ShieldCheck, Lock } from "lucide-react";
 import { toast } from "sonner";
 
 const formSchema = z.object({
@@ -30,35 +22,29 @@ const formSchema = z.object({
   address: z.string().min(5, "Service address is required"),
   city: z.string().min(2, "City is required"),
   zip: z.string().min(5, "ZIP is required"),
-  paymentPreference: z.string().min(1, "Choose a payment preference"),
   notes: z.string().optional(),
 });
 
 type FormValues = z.infer<typeof formSchema>;
 
-const paymentOptions = [
-  "Call me for card payment",
-  "Send me a secure payment link by text/email",
-  "Invoice / pay by check",
-];
-
 interface MembershipEnrollFormProps {
   plan: MembershipPlan;
+  /** When false, show setup message instead of live checkout */
+  stripeEnabled?: boolean;
+  canceled?: boolean;
 }
 
-export function MembershipEnrollForm({ plan }: MembershipEnrollFormProps) {
-  const [state, formAction, isPending] = useActionState(
-    submitMembershipEnrollment,
-    null
-  );
-  const [paymentPreference, setPaymentPreference] = useState("");
+export function MembershipEnrollForm({
+  plan,
+  stripeEnabled = true,
+  canceled = false,
+}: MembershipEnrollFormProps) {
+  const [isPending, setIsPending] = useState(false);
 
   const {
     register,
     handleSubmit,
     formState: { errors },
-    reset,
-    setValue,
   } = useForm<FormValues>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -68,42 +54,55 @@ export function MembershipEnrollForm({ plan }: MembershipEnrollFormProps) {
       address: "",
       city: "",
       zip: "",
-      paymentPreference: "",
       notes: "",
     },
   });
 
-  useEffect(() => {
-    if (state?.success) {
-      toast.success(state.message, { duration: 8000 });
-      reset();
-      setPaymentPreference("");
-    } else if (state?.message && !state.success) {
-      toast.error(state.message);
+  const onSubmit = async (data: FormValues) => {
+    if (!stripeEnabled) {
+      toast.error(
+        "Online payments are not set up yet. Please call (559) 573-2269 to enroll."
+      );
+      return;
     }
-  }, [state, reset]);
 
-  const onSubmit = (data: FormValues) => {
-    const fd = new FormData();
-    fd.append("name", data.name);
-    fd.append("phone", data.phone);
-    fd.append("email", data.email);
-    fd.append("plan", plan.name);
-    fd.append("planPrice", `${formatMembershipPrice(plan.price)}${plan.period}`);
-    fd.append("address", data.address);
-    fd.append("city", data.city);
-    fd.append("zip", data.zip);
-    fd.append("paymentPreference", data.paymentPreference);
-    if (data.notes) fd.append("notes", data.notes);
-    formAction(fd);
+    setIsPending(true);
+    try {
+      const res = await fetch("/api/checkout/membership", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          planId: plan.id,
+          name: data.name,
+          phone: data.phone,
+          email: data.email,
+          address: data.address,
+          city: data.city,
+          zip: data.zip,
+          notes: data.notes || "",
+        }),
+      });
+
+      const payload = (await res.json()) as { url?: string; error?: string };
+
+      if (!res.ok || !payload.url) {
+        throw new Error(payload.error || "Could not start secure checkout.");
+      }
+
+      // Redirect to Stripe-hosted Checkout (card never touches our site)
+      window.location.href = payload.url;
+    } catch (err) {
+      toast.error(
+        err instanceof Error
+          ? err.message
+          : "Checkout failed. Please try again or call us."
+      );
+      setIsPending(false);
+    }
   };
 
   return (
-    <form
-      onSubmit={handleSubmit(onSubmit)}
-      className="space-y-5"
-      noValidate
-    >
+    <form onSubmit={handleSubmit(onSubmit)} className="space-y-5" noValidate>
       <div className="rounded-xl border border-[var(--brand-teal)]/30 bg-[var(--brand-teal)]/5 px-4 py-3 text-sm text-[var(--brand-navy)] flex gap-2.5">
         <ShieldCheck className="h-5 w-5 text-[var(--brand-teal)] shrink-0 mt-0.5" />
         <div>
@@ -112,10 +111,26 @@ export function MembershipEnrollForm({ plan }: MembershipEnrollFormProps) {
             {plan.period}
           </div>
           <p className="text-muted-foreground text-xs mt-0.5">
-            This is a membership purchase, not a service quote. After you submit, we&apos;ll confirm payment and schedule your first inspection.
+            Enter your details, then pay securely on Stripe&apos;s checkout page. Your card number is never stored on our website.
           </p>
         </div>
       </div>
+
+      {canceled && (
+        <div className="rounded-xl border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-900">
+          Checkout was canceled. You can update your info below and try payment again when ready.
+        </div>
+      )}
+
+      {!stripeEnabled && (
+        <div className="rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-900">
+          Online card payments are being connected. Call{" "}
+          <a href="tel:+15595732269" className="font-semibold underline">
+            (559) 573-2269
+          </a>{" "}
+          to enroll over the phone, or finish Stripe setup (see site owner instructions).
+        </div>
+      )}
 
       <div className="grid grid-cols-1 gap-5 sm:grid-cols-2">
         <div>
@@ -218,37 +233,6 @@ export function MembershipEnrollForm({ plan }: MembershipEnrollFormProps) {
       </div>
 
       <div>
-        <Label htmlFor="paymentPreference" className="label">
-          How would you like to pay? *
-        </Label>
-        <Select
-          value={paymentPreference}
-          onValueChange={(value) => {
-            const v = value || "";
-            setPaymentPreference(v);
-            setValue("paymentPreference", v, { shouldValidate: true });
-          }}
-          disabled={isPending}
-        >
-          <SelectTrigger className="form-input h-12 w-full" id="paymentPreference">
-            <SelectValue placeholder="Select payment preference..." />
-          </SelectTrigger>
-          <SelectContent>
-            {paymentOptions.map((opt) => (
-              <SelectItem key={opt} value={opt}>
-                {opt}
-              </SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
-        {errors.paymentPreference && (
-          <p className="mt-1.5 text-xs text-destructive">
-            {errors.paymentPreference.message}
-          </p>
-        )}
-      </div>
-
-      <div>
         <Label htmlFor="notes" className="label">
           Notes (optional)
         </Label>
@@ -264,22 +248,35 @@ export function MembershipEnrollForm({ plan }: MembershipEnrollFormProps) {
 
       <Button
         type="submit"
-        disabled={isPending}
+        disabled={isPending || !stripeEnabled}
         className="w-full h-12 text-base font-semibold bg-[var(--brand-teal)] hover:bg-[var(--brand-teal)]/90 text-white shadow-sm"
         size="lg"
       >
         {isPending ? (
           <>
             <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-            Processing enrollment...
+            Redirecting to secure checkout...
           </>
         ) : (
-          `Enroll in ${plan.name} — ${formatMembershipPrice(plan.price)}/yr`
+          <>
+            <Lock className="mr-2 h-4 w-4" />
+            Pay {formatMembershipPrice(plan.price)} securely with Stripe
+          </>
         )}
       </Button>
 
-      <p className="text-center text-[11px] text-muted-foreground">
-        Annual membership. You may pause or cancel after the first year. Payment is collected after enrollment confirmation — we never charge a card on this page until you approve.
+      <p className="text-center text-[11px] text-muted-foreground leading-relaxed">
+        Payments are processed by{" "}
+        <a
+          href="https://stripe.com"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="underline hover:text-[var(--brand-navy)]"
+        >
+          Stripe
+        </a>
+        , a PCI Level 1 certified processor used by millions of businesses. Annual membership.
+        You may pause or cancel after the first year.
       </p>
     </form>
   );

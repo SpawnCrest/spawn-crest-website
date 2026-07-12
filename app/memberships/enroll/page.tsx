@@ -8,20 +8,23 @@ import {
 } from "@/lib/memberships";
 import { MembershipEnrollForm } from "@/components/membership-enroll-form";
 import { Logo } from "@/components/logo";
+import { isStripeConfigured } from "@/lib/stripe";
 
 export const metadata: Metadata = {
   title: "Purchase Membership",
   description:
-    "Enroll in a Spawn Crest maintenance membership. Choose Biyearly, Quarterly, or VIP protection for your Fresno-area home.",
+    "Enroll in a Spawn Crest maintenance membership. Choose Biyearly, Quarterly, or VIP protection for your Fresno-area home. Secure checkout powered by Stripe.",
 };
 
 interface EnrollPageProps {
-  searchParams: Promise<{ plan?: string }>;
+  searchParams: Promise<{ plan?: string; canceled?: string }>;
 }
 
 export default async function MembershipEnrollPage({ searchParams }: EnrollPageProps) {
   const params = await searchParams;
   const selected = getMembershipPlan(params.plan) ?? MEMBERSHIP_PLANS[1]; // default Quarterly
+  const stripeEnabled = isStripeConfigured();
+  const canceled = params.canceled === "1";
 
   return (
     <div className="min-h-screen bg-background flex flex-col">
@@ -132,6 +135,9 @@ export default async function MembershipEnrollPage({ searchParams }: EnrollPageP
                 <div className="mt-6 pt-5 border-t text-xs text-muted-foreground space-y-1.5">
                   <p>First inspection scheduled within 10 business days of payment.</p>
                   <p>Annual commitment. Pause or cancel after the first year.</p>
+                  <p className="pt-1 font-medium text-[var(--brand-navy)]/70">
+                    Secure card payments powered by Stripe (PCI Level 1).
+                  </p>
                 </div>
               </div>
             </aside>
@@ -143,9 +149,14 @@ export default async function MembershipEnrollPage({ searchParams }: EnrollPageP
                   Checkout details
                 </h2>
                 <p className="text-sm text-muted-foreground mb-6">
-                  Enter your info to enroll. We&apos;ll confirm payment using your preferred method.
+                  Enter your info, then pay with card on Stripe&apos;s secure checkout page.
                 </p>
-                <MembershipEnrollForm key={selected.id} plan={selected} />
+                <MembershipEnrollForm
+                  key={selected.id}
+                  plan={selected}
+                  stripeEnabled={stripeEnabled}
+                  canceled={canceled}
+                />
               </div>
             </div>
           </div>
