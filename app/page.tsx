@@ -21,6 +21,7 @@ import {
   Percent,
 } from "lucide-react";
 
+import Link from "next/link";
 import { Header } from "@/components/header";
 import { Logo } from "@/components/logo";
 import { ServiceCard } from "@/components/service-card";
@@ -329,13 +330,12 @@ export default function SpawnCrestWebsite() {
                 <li className="flex gap-2.5"><CheckCircle2 className="h-4 w-4 mt-[3px] text-[var(--brand-teal)] shrink-0" /> Written inspection report after each visit</li>
               </ul>
 
-              <Button 
-                onClick={() => openQuote("Maintenance Membership – Biyearly (2x/year)")} 
-                variant="outline"
-                className="mt-7 border-[var(--brand-navy)]/30 text-[var(--brand-navy)] hover:bg-[var(--brand-navy)] hover:text-white"
+              <Link
+                href="/memberships/enroll?plan=biyearly"
+                className="mt-7 inline-flex h-10 w-full items-center justify-center rounded-lg border border-[var(--brand-navy)]/30 bg-background px-4 text-sm font-medium text-[var(--brand-navy)] transition-colors hover:bg-[var(--brand-navy)] hover:text-white"
               >
                 Enroll in Biyearly
-              </Button>
+              </Link>
             </div>
 
             {/* Quarterly - Recommended */}
@@ -359,12 +359,12 @@ export default function SpawnCrestWebsite() {
                 <li className="flex gap-2.5"><CheckCircle2 className="h-4 w-4 mt-[3px] text-[var(--brand-teal)] shrink-0" /> Detailed written report + photos</li>
               </ul>
 
-              <Button 
-                onClick={() => openQuote("Maintenance Membership – Quarterly (4x/year)")} 
-                className="mt-7 bg-[var(--brand-teal)] hover:bg-[var(--brand-teal)]/90 text-white"
+              <Link
+                href="/memberships/enroll?plan=quarterly"
+                className="mt-7 inline-flex h-10 w-full items-center justify-center rounded-lg bg-[var(--brand-teal)] px-4 text-sm font-medium text-white transition-colors hover:bg-[var(--brand-teal)]/90"
               >
                 Enroll in Quarterly
-              </Button>
+              </Link>
             </div>
 
             {/* VIP */}
@@ -387,13 +387,12 @@ export default function SpawnCrestWebsite() {
                 <li className="flex gap-2.5"><CheckCircle2 className="h-4 w-4 mt-[3px] text-[var(--brand-teal)] shrink-0" /> Seasonal drain &amp; fixture maintenance</li>
               </ul>
 
-              <Button 
-                onClick={() => openQuote("Maintenance Membership – VIP Priority")} 
-                variant="outline"
-                className="mt-7 border-[var(--brand-navy)]/30 text-[var(--brand-navy)] hover:bg-[var(--brand-navy)] hover:text-white"
+              <Link
+                href="/memberships/enroll?plan=vip"
+                className="mt-7 inline-flex h-10 w-full items-center justify-center rounded-lg border border-[var(--brand-navy)]/30 bg-background px-4 text-sm font-medium text-[var(--brand-navy)] transition-colors hover:bg-[var(--brand-navy)] hover:text-white"
               >
                 Enroll in VIP
-              </Button>
+              </Link>
             </div>
           </div>
 

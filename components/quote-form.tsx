@@ -37,9 +37,6 @@ const services = [
   "Water Heater Installation",
   "Leak Detection & Repair",
   "Fixture Installation",
-  "Maintenance Membership – Biyearly (2x/year)",
-  "Maintenance Membership – Quarterly (4x/year)",
-  "Maintenance Membership – VIP Priority",
   "Other / Not sure",
 ];
 
