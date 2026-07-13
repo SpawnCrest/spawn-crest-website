@@ -6,7 +6,7 @@ import { getSiteUrl, getStripe, isStripeConfigured } from "@/lib/stripe";
 const bodySchema = z.object({
   planId: z.enum(["biyearly", "quarterly", "vip"]),
   name: z.string().min(2),
-  phone: z.string().min(10),
+  phone: z.string().regex(/^\(\d{3}\)\d{3}-\d{4}$/, "Phone must be (xxx)xxx-xxxx"),
   email: z.string().email(),
   address: z.string().min(5),
   city: z.string().min(2),

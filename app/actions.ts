@@ -3,12 +3,13 @@
 import { z } from "zod";
 import { sendContactEmail } from "@/lib/email";
 
+const phoneSchema = z
+  .string()
+  .regex(/^\(\d{3}\)\d{3}-\d{4}$/, "Phone must be (xxx)xxx-xxxx");
+
 const quoteSchema = z.object({
   name: z.string().min(2, "Name must be at least 2 characters"),
-  phone: z
-    .string()
-    .min(10, "Please enter a valid phone number")
-    .regex(/^[\d\s\-\(\)\+]+$/, "Invalid phone format"),
+  phone: phoneSchema,
   email: z.string().email("Please enter a valid email address"),
   service: z.string().min(1, "Please select a service"),
   location: z.string().optional(),
@@ -128,10 +129,7 @@ export async function submitQuoteRequest(
 
 const membershipSchema = z.object({
   name: z.string().min(2, "Name must be at least 2 characters"),
-  phone: z
-    .string()
-    .min(10, "Please enter a valid phone number")
-    .regex(/^[\d\s\-\(\)\+]+$/, "Invalid phone format"),
+  phone: phoneSchema,
   email: z.string().email("Please enter a valid email address"),
   plan: z.string().min(1, "Please select a membership plan"),
   planPrice: z.string().min(1),

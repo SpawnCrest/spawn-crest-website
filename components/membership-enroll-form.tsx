@@ -14,10 +14,11 @@ import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { Loader2, ShieldCheck, Lock } from "lucide-react";
 import { toast } from "sonner";
+import { formatPhoneInput, PHONE_PATTERN } from "@/lib/phone";
 
 const formSchema = z.object({
   name: z.string().min(2, "Name is required"),
-  phone: z.string().min(10, "Valid phone required"),
+  phone: z.string().regex(PHONE_PATTERN, "Phone must be (xxx)xxx-xxxx"),
   email: z.string().email("Valid email required"),
   address: z.string().min(5, "Service address is required"),
   city: z.string().min(2, "City is required"),
@@ -45,6 +46,8 @@ export function MembershipEnrollForm({
     register,
     handleSubmit,
     formState: { errors },
+    setValue,
+    watch,
   } = useForm<FormValues>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -57,6 +60,13 @@ export function MembershipEnrollForm({
       notes: "",
     },
   });
+
+  const phoneValue = watch("phone");
+
+  const handlePhoneChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const formatted = formatPhoneInput(e.target.value);
+    setValue("phone", formatted, { shouldValidate: formatted.length === 13 });
+  };
 
   const onSubmit = async (data: FormValues) => {
     if (!stripeEnabled) {
@@ -155,9 +165,13 @@ export function MembershipEnrollForm({
           <Input
             id="phone"
             type="tel"
-            placeholder="(559) 573-2269"
+            inputMode="numeric"
+            autoComplete="tel-national"
+            placeholder="(559)573-2269"
             className="form-input h-12"
-            {...register("phone")}
+            value={phoneValue}
+            onChange={handlePhoneChange}
+            maxLength={13}
             disabled={isPending}
           />
           {errors.phone && (

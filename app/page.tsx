@@ -646,7 +646,7 @@ export default function SpawnCrestWebsite() {
         </div>
 
         <div className="mx-auto max-w-6xl px-6 mt-14 pt-6 border-t border-white/10 text-[11px] text-white/40 flex flex-col md:flex-row gap-y-1 md:items-center justify-between">
-          <div>© {new Date().getFullYear()} Spawn Crest Plumbing, LLC. All rights reserved.</div>
+          <div>© {new Date().getFullYear()} Spawn Crest Plumbing Corporation. All rights reserved.</div>
           <div className="flex gap-4">
             <span>Privacy</span>
             <span>Terms</span>

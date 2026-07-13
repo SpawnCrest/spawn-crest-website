@@ -16,12 +16,15 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Loader2, CheckCircle2 } from "lucide-react";
+import { Loader2 } from "lucide-react";
 import { toast } from "sonner";
+import { formatPhoneInput, PHONE_PATTERN } from "@/lib/phone";
 
 const formSchema = z.object({
   name: z.string().min(2, "Name is required"),
-  phone: z.string().min(10, "Valid phone required"),
+  phone: z
+    .string()
+    .regex(PHONE_PATTERN, "Phone must be (xxx)xxx-xxxx"),
   email: z.string().email("Valid email required"),
   service: z.string().min(1, "Please select a service"),
   location: z.string().optional(),
@@ -56,6 +59,7 @@ export function QuoteForm({ variant = "full", onSuccess, initialService }: Quote
     formState: { errors },
     reset,
     setValue,
+    watch,
   } = useForm<FormValues>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -67,6 +71,13 @@ export function QuoteForm({ variant = "full", onSuccess, initialService }: Quote
       message: "",
     },
   });
+
+  const phoneValue = watch("phone");
+
+  const handlePhoneChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const formatted = formatPhoneInput(e.target.value);
+    setValue("phone", formatted, { shouldValidate: formatted.length === 13 });
+  };
 
   // Sync select with rhf
   const handleServiceChange = (value: string | null) => {
@@ -135,9 +146,13 @@ export function QuoteForm({ variant = "full", onSuccess, initialService }: Quote
           <Input
             id="phone"
             type="tel"
-            placeholder="(559) 573-2269"
+            inputMode="numeric"
+            autoComplete="tel-national"
+            placeholder="(559)573-2269"
             className="form-input h-12"
-            {...register("phone")}
+            value={phoneValue}
+            onChange={handlePhoneChange}
+            maxLength={13}
             disabled={isPending}
             aria-invalid={!!errors.phone}
           />
