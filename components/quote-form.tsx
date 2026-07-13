@@ -249,7 +249,7 @@ export function QuoteForm({ variant = "full", onSuccess, initialService }: Quote
       </Button>
 
       <p className="text-center text-[11px] text-muted-foreground">
-        We typically respond within 15 minutes during business hours. 24/7 for emergencies.
+        We typically respond within 1 hour during business hours. 24/7 for emergencies.
       </p>
     </form>
   );

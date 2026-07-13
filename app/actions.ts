@@ -123,7 +123,7 @@ export async function submitQuoteRequest(
   return {
     success: true,
     message:
-      "Thank you! Your quote request has been received. A team member will contact you within 15 minutes during business hours.",
+      "Thank you! Your quote request has been received. A team member will contact you within 1 hour during business hours.",
   };
 }
 
