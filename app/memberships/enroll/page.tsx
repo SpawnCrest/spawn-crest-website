@@ -34,11 +34,11 @@ export default async function MembershipEnrollPage({ searchParams }: EnrollPageP
             <Logo size="sm" />
           </Link>
           <a
-            href="tel:+15595732269"
+            href="tel:+15593254541"
             className="inline-flex items-center gap-2 text-sm font-medium text-[var(--brand-navy)]/80 hover:text-[var(--brand-navy)]"
           >
             <Phone className="h-4 w-4" />
-            <span className="hidden sm:inline">(559) 573-2269</span>
+            <span className="hidden sm:inline">(559) 325-4541</span>
             <span className="sm:hidden">Call</span>
           </a>
         </div>

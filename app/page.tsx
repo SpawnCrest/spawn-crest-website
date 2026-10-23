@@ -222,11 +222,11 @@ export default function SpawnCrestWebsite() {
                 Get a Free Quote
               </Button>
               <a
-                href="tel:+15595732269"
+                href="tel:+15593254541"
                 className="inline-flex h-14 items-center justify-center gap-2.5 rounded-xl border border-white/30 bg-white/5 px-8 text-base font-semibold text-white backdrop-blur transition hover:bg-white/10 active:bg-white/15"
               >
                 <PhoneCall className="h-4 w-4" />
-                Call 24/7: (559) 573-2269
+                Call 24/7: (559) 325-4541
               </a>
             </div>
 
@@ -524,8 +524,8 @@ export default function SpawnCrestWebsite() {
                 <div className="space-y-7 text-[15px]">
                   <div>
                     <div className="font-semibold text-[var(--brand-navy)] mb-1">Call or Text 24/7</div>
-                    <a href="tel:+15595732269" className="text-2xl font-semibold tracking-tight text-[var(--brand-navy)] hover:underline">
-                      (559) 573-2269
+                    <a href="tel:+15593254541" className="text-2xl font-semibold tracking-tight text-[var(--brand-navy)] hover:underline">
+                      (559) 325-4541
                     </a>
                   </div>
 
@@ -637,7 +637,7 @@ export default function SpawnCrestWebsite() {
           <div className="col-span-2 md:col-span-3">
             <div className="font-semibold text-white mb-3 tracking-wide text-xs">CONTACT</div>
             <div className="space-y-1.5">
-              <a href="tel:+15595732269" className="block hover:text-white transition">(559) 573-2269</a>
+              <a href="tel:+15593254541" className="block hover:text-white transition">(559) 325-4541</a>
               <a href="mailto:admin@spawncrest.com" className="block hover:text-white transition">admin@spawncrest.com</a>
               <div className="pt-1">Fresno, California</div>
               <div className="text-[11px] text-white/50 pt-3">Licensed • Bonded • Insured<br />California C-36 Plumbing License #1156533</div>

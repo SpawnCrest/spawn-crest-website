@@ -106,7 +106,7 @@ export async function submitQuoteRequest(
     const detail = error instanceof Error ? error.message : "";
     // Helpful hints without leaking secrets
     let hint =
-      "We couldn't send your request right now. Please call us at (559) 573-2269 and we'll help you right away.";
+      "We couldn't send your request right now. Please call us at (559) 325-4541 and we'll help you right away.";
     if (/domain|verified|from/i.test(detail)) {
       hint +=
         " (Email setup: verify your domain in Resend, or use onboarding@resend.dev as the from address.)";
@@ -238,7 +238,7 @@ export async function submitMembershipEnrollment(
     return {
       success: false,
       message:
-        "We couldn't complete your enrollment request right now. Please call us at (559) 573-2269 and we'll enroll you over the phone.",
+        "We couldn't complete your enrollment request right now. Please call us at (559) 325-4541 and we'll enroll you over the phone.",
     };
   }
 

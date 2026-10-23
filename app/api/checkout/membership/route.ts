@@ -20,7 +20,7 @@ export async function POST(request: Request) {
       return NextResponse.json(
         {
           error:
-            "Online payments are not configured yet. Please call (559) 573-2269 to enroll, or set STRIPE_SECRET_KEY on the server.",
+            "Online payments are not configured yet. Please call (559) 325-4541 to enroll, or set STRIPE_SECRET_KEY on the server.",
         },
         { status: 503 }
       );
@@ -111,7 +111,7 @@ export async function POST(request: Request) {
         error:
           error instanceof Error
             ? error.message
-            : "Checkout failed. Please try again or call (559) 573-2269.",
+            : "Checkout failed. Please try again or call (559) 325-4541.",
       },
       { status: 500 }
     );

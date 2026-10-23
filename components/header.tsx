@@ -80,11 +80,11 @@ export function Header({ onRequestQuote }: HeaderProps) {
           <div className="flex items-center gap-3">
             {/* Phone - desktop */}
             <a
-              href="tel:+15595732269"
+              href="tel:+15593254541"
               className="hidden lg:flex items-center gap-2 text-sm font-medium text-[var(--brand-navy)]/80 hover:text-[var(--brand-navy)] transition-colors"
             >
               <Phone className="h-4 w-4" />
-              (559) 573-2269
+              (559) 325-4541
             </a>
 
             {/* CTA Button - desktop */}
@@ -127,11 +127,11 @@ export function Header({ onRequestQuote }: HeaderProps) {
 
                   <div className="px-4 pt-6 pb-4 space-y-3">
                     <a
-                      href="tel:+15595732269"
+                      href="tel:+15593254541"
                       className="flex items-center justify-center gap-2 rounded-xl border border-[var(--brand-navy)]/20 py-3 text-sm font-medium text-[var(--brand-navy)] active:bg-muted"
                     >
                       <Phone className="h-4 w-4" />
-                      Call (559) 573-2269
+                      Call (559) 325-4541
                     </a>
                     <Button
                       onClick={() => {

@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { ThemeProvider } from "next-themes";
+import { AppComingSoon } from "@/components/app-coming-soon";
 import { Toaster } from "@/components/ui/sonner";
 
 const geistSans = Geist({
@@ -19,7 +20,7 @@ const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://www.spawncrest.com"
 
 const siteTitle = "Spawn Crest Plumbing | Licensed Plumbers in Fresno, CA";
 const siteDescription =
-  "Spawn Crest Plumbing serves Fresno, Clovis, and the Central Valley with 24/7 emergency plumbing, drain cleaning, water heater repair & install, leak detection, pipe repair, and fixture installation. California C-36 License #1156533. Call (559) 573-2269.";
+  "Spawn Crest Plumbing serves Fresno, Clovis, and the Central Valley with 24/7 emergency plumbing, drain cleaning, water heater repair & install, leak detection, pipe repair, and fixture installation. California C-36 License #1156533. Call (559) 325-4541.";
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
@@ -111,7 +112,7 @@ const jsonLd = {
   logo: `${siteUrl}/icon-512.png`,
   image: `${siteUrl}/og-image.jpg`,
   description: siteDescription,
-  telephone: "+1-559-573-2269",
+  telephone: "+1-559-325-4541",
   email: "admin@spawncrest.com",
   foundingDate: "2026",
   areaServed: [
@@ -189,6 +190,7 @@ export default function RootLayout({
           disableTransitionOnChange
         >
           {children}
+          <AppComingSoon />
           <Toaster position="top-center" richColors closeButton />
         </ThemeProvider>
       </body>

@@ -71,7 +71,7 @@ export function MembershipEnrollForm({
   const onSubmit = async (data: FormValues) => {
     if (!stripeEnabled) {
       toast.error(
-        "Online payments are not set up yet. Please call (559) 573-2269 to enroll."
+        "Online payments are not set up yet. Please call (559) 325-4541 to enroll."
       );
       return;
     }
@@ -135,8 +135,8 @@ export function MembershipEnrollForm({
       {!stripeEnabled && (
         <div className="rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-900">
           Online card payments are being connected. Call{" "}
-          <a href="tel:+15595732269" className="font-semibold underline">
-            (559) 573-2269
+          <a href="tel:+15593254541" className="font-semibold underline">
+            (559) 325-4541
           </a>{" "}
           to enroll over the phone, or finish Stripe setup (see site owner instructions).
         </div>
@@ -167,7 +167,7 @@ export function MembershipEnrollForm({
             type="tel"
             inputMode="numeric"
             autoComplete="tel-national"
-            placeholder="(559)573-2269"
+            placeholder="(559)325-4541"
             className="form-input h-12"
             value={phoneValue}
             onChange={handlePhoneChange}

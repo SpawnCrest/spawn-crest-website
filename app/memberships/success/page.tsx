@@ -89,11 +89,11 @@ export default async function MembershipSuccessPage({ searchParams }: SuccessPag
               Back to home
             </Link>
             <a
-              href="tel:+15595732269"
+              href="tel:+15593254541"
               className="inline-flex h-11 items-center justify-center gap-2 rounded-lg border border-[var(--brand-navy)]/20 px-6 text-sm font-semibold text-[var(--brand-navy)] hover:bg-muted"
             >
               <Phone className="h-4 w-4" />
-              Call (559) 573-2269
+              Call (559) 325-4541
             </a>
           </div>
         </div>
