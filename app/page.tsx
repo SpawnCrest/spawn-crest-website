@@ -434,8 +434,8 @@ export default function SpawnCrestWebsite() {
                     <div className="font-semibold text-lg mt-1">Adrian &amp; Isaac</div>
                   </div>
                   <div>
-                    <div className="text-white/50 text-xs tracking-widest">JOBS COMPLETED</div>
-                    <div className="font-semibold text-lg mt-1">0 (ready!)</div>
+                    <div className="text-white/50 text-xs tracking-widest">LICENSE</div>
+                    <div className="font-semibold text-lg mt-1">C-36 #1156533</div>
                   </div>
                   <div>
                     <div className="text-white/50 text-xs tracking-widest">OUR DRIVE</div>
